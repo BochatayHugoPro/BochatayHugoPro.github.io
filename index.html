@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Hugo Bochatay Portfolio</title>
+<meta name="description" content="Hugo Bochatay, game developer and game designer. Projects in Unity and Godot.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: two columns on desktop. A sticky identity card on the left (name, role, contact, nav),
+   and a reading column on the right. Projects read like build spec sheets. Stacks to one column on phones. */
+:root {
+  --bg: #F4F6F9;
+  --surface: #FFFFFF;
+  --ink: #131A2A;
+  --muted: #586276;
+  --line: #DDE2EA;
+  --accent: #2A4ED6;
+  --accent-soft: #E7ECFC;
+  --tile-a: #E3E9FB;
+  --tile-b: #D2DBF8;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D111A; --surface: #151B27; --ink: #E7EBF3; --muted: #9AA3B6; --line: #252D3D;
+    --accent: #8DA4FF; --accent-soft: #1C2541; --tile-a: #1A2236; --tile-b: #222C47; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D111A; --surface: #151B27; --ink: #E7EBF3; --muted: #9AA3B6; --line: #252D3D;
+  --accent: #8DA4FF; --accent-soft: #1C2541; --tile-a: #1A2236; --tile-b: #222C47; color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; }
+img { max-width: 100%; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font-body); font-size: 16px; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; text-underline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+h1, h2, h3 { font-family: var(--font-display); text-wrap: balance; margin: 0; }
+
+.wrap {
+  max-width: 1120px; margin: 0 auto; padding-block: 56px 72px;
+  display: grid; grid-template-columns: 300px minmax(0, 1fr); gap: 64px; align-items: start;
+}
+
+/* Identity column */
+.side { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 40px); display: grid; gap: 28px; }
+.mono { font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.side h1 { font-size: 44px; line-height: 1.02; font-weight: 700; letter-spacing: -.02em; }
+.role { font-size: 18px; color: var(--ink); margin: 12px 0 0; font-weight: 500; }
+.role span { color: var(--muted); font-weight: 400; }
+.where { margin: 6px 0 0; color: var(--muted); font-size: 15px; }
+.nav { display: grid; gap: 2px; border-left: 1px solid var(--line); }
+.nav a { color: var(--muted); padding: 5px 0 5px 16px; margin-left: -1px; border-left: 2px solid transparent; font-size: 15px; }
+.nav a:hover { color: var(--ink); text-decoration: none; }
+.nav a.on { color: var(--ink); border-left-color: var(--accent); font-weight: 500; }
+.contact { display: grid; gap: 10px; }
+.email { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.email code { font-family: var(--font-mono); font-size: 13.5px; color: var(--ink); user-select: all; word-break: break-all; }
+.btn {
+  font: 500 13px var(--font-body); color: var(--accent); background: var(--accent-soft);
+  border: 0; border-radius: 6px; padding: 5px 10px; cursor: pointer;
+}
+.btn:hover { filter: brightness(.97); }
+.links { display: flex; gap: 16px; flex-wrap: wrap; font-weight: 500; font-size: 15px; }
+
+/* Reading column */
+main { display: grid; gap: 72px; min-width: 0; }
+section { scroll-margin-top: 32px; display: grid; gap: 24px; }
+section > h2 { font-size: 15px; font-family: var(--font-mono); font-weight: 500; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+.lead { font-family: var(--font-display); font-size: 27px; line-height: 1.3; font-weight: 500; letter-spacing: -.01em; max-width: 32ch; margin: 0; }
+.prose { max-width: 64ch; color: var(--ink); margin: 0; }
+.prose + .prose { margin-top: -8px; }
+.muted { color: var(--muted); }
+
+/* Skills */
+.skills { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.skills h3 { font-size: 16px; margin-bottom: 8px; }
+.skills ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; color: var(--muted); font-size: 15px; }
+
+/* Projects */
+.filters { display: flex; gap: 8px; flex-wrap: wrap; }
+.chip {
+  font: 500 13px var(--font-body); padding: 6px 14px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--line); background: transparent; color: var(--muted);
+}
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.projects { display: grid; gap: 16px; }
+.proj {
+  display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 24px; align-items: start;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 20px;
+}
+.media {
+  position: relative; display: block; border-radius: 8px; overflow: hidden;
+  aspect-ratio: 16 / 9; max-width: 100%; background: #0B0E15;
+}
+.media img { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .3s ease; }
+.media:hover img { transform: scale(1.03); }
+.media .play {
+  position: absolute; left: 10px; bottom: 10px; display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(10, 13, 20, .78); color: #FFFFFF; font: 500 12px var(--font-body);
+  padding: 5px 10px 5px 8px; border-radius: 999px;
+}
+.media .play svg { width: 12px; height: 12px; fill: currentColor; }
+.media:hover { text-decoration: none; }
+.head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.watch { font-size: 14px; font-weight: 500; white-space: nowrap; }
+.tile {
+  border-radius: 8px; aspect-ratio: 16 / 9; max-width: 100%;
+  background:
+    repeating-linear-gradient(135deg, transparent 0 10px, var(--tile-b) 10px 11px),
+    var(--tile-a);
+  display: flex; flex-direction: column; justify-content: space-between; padding: 14px;
+}
+.tile b { font-family: var(--font-display); font-size: 40px; line-height: 1; color: var(--accent); font-weight: 700; }
+.tile span { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.proj h3 { font-size: 22px; letter-spacing: -.01em; }
+.proj .desc { margin: 6px 0 14px; max-width: 60ch; }
+.spec {
+  display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0;
+  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); margin-bottom: 14px;
+}
+.spec div { padding: 8px 12px 8px 0; display: grid; gap: 1px; }
+.spec div + div { padding-left: 12px; border-left: 1px solid var(--line); }
+.spec dt { font-family: var(--font-mono); font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.spec dd { margin: 0; font-size: 14px; font-weight: 500; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; list-style: none; padding: 0; margin: 0; }
+.tags li { font-size: 13px; color: var(--muted); background: var(--bg); border: 1px solid var(--line); border-radius: 6px; padding: 2px 8px; }
+
+/* Timeline */
+.timeline { display: grid; gap: 0; }
+.item { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 24px; padding-block: 18px; border-bottom: 1px solid var(--line); }
+.item:first-child { padding-top: 0; }
+.item:last-child { border-bottom: 0; }
+.date { font-family: var(--font-mono); font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; padding-top: 3px; }
+.item h3 { font-family: var(--font-body); font-size: 17px; font-weight: 600; }
+.org { color: var(--muted); font-size: 15px; margin: 2px 0 6px; }
+.item ul { margin: 0; padding-left: 18px; display: grid; gap: 2px; max-width: 62ch; }
+.item p { margin: 0; max-width: 62ch; }
+.sub { font-family: var(--font-mono); font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 8px 0 -8px; }
+.compact .item { padding-block: 12px; }
+.compact .item h3 { font-size: 15.5px; font-weight: 500; }
+.compact .org { margin-bottom: 0; }
+
+.langs { display: flex; gap: 32px; flex-wrap: wrap; }
+.langs div { display: grid; }
+.langs b { font-weight: 600; }
+
+footer { color: var(--muted); font-size: 14px; border-top: 1px solid var(--line); padding-top: 20px; }
+
+@media (max-width: 1040px) and (min-width: 621px) {
+  .proj { grid-template-columns: 200px minmax(0, 1fr); }
+}
+@media (max-width: 900px) {
+  .wrap { grid-template-columns: minmax(0, 1fr); gap: 48px; padding-block: 32px 56px; }
+  .side { position: static; }
+  .nav { display: none; }
+  .side h1 { font-size: 40px; }
+}
+@media (max-width: 620px) {
+  .proj { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .tile { flex-direction: row; align-items: flex-end; }
+  .spec { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .spec div:nth-child(3) { padding-left: 0; border-left: 0; }
+  .spec div:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .skills { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .item { grid-template-columns: minmax(0, 1fr); gap: 4px; }
+  .lead { font-size: 23px; }
+}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <aside class="side">
+    <div>
+      <div class="mono">Portfolio</div>
+      <h1 style="margin-top:10px">Hugo<br>Bochatay</h1>
+      <p class="role">Game Developer <span>&amp;</span> Game Designer</p>
+      <p class="where">Student at ISART Digital · Nice, France</p>
+    </div>
+
+    <nav class="nav" aria-label="Sections">
+      <a href="#about">About</a>
+      <a href="#projects">Projects</a>
+      <a href="#experience">Experience</a>
+      <a href="#education">Education</a>
+    </nav>
+
+    <div class="contact">
+      <div class="mono">Contact</div>
+      <div class="email">
+        <code id="email">hugo.bochataypro@gmail.com</code>
+        <button class="btn" id="copy" type="button">Copy</button>
+      </div>
+      <div class="links">
+        <a href="https://www.linkedin.com/in/hugo-bochatay/" target="_blank" rel="noopener">LinkedIn ↗</a>
+        <a href="https://www.youtube.com/@HugoBochatay" target="_blank" rel="noopener">YouTube ↗</a>
+      </div>
+    </div>
+  </aside>
+
+  <main>
+    <section id="about" aria-labelledby="about-h">
+      <h2 id="about-h">About</h2>
+      <p class="lead">I want to make games that stay with players long after they stop playing.</p>
+      <p class="prose">I'm a game development student at ISART Digital in Nice, originally from Chamonix. I work in Unity and Godot, solo and in teams with designers and artists. Before games, I spent years in professional kitchens, including a Michelin-starred restaurant. That taught me rigor, working under time pressure and keeping a team moving.</p>
+      <p class="prose muted">Games that shaped how I think about design: Blue Prince, Mouthwashing, Omori, OneShot, Threshold and Mole. I'm especially inspired by Tonda Ros and Mike Klubnika.</p>
+
+      <div class="skills">
+        <div>
+          <h3>Engines</h3>
+          <ul><li>Unity (C#)</li><li>Godot (GDScript)</li></ul>
+        </div>
+        <div>
+          <h3>Programming</h3>
+          <ul><li>Player controls &amp; cameras</li><li>3D physics &amp; collisions</li><li>Enemy AI &amp; pathfinding</li><li>Mobile optimization</li></ul>
+        </div>
+        <div>
+          <h3>Design</h3>
+          <ul><li>Level design</li><li>Game feel &amp; feedback</li><li>Mobile UI/UX</li><li>Monetization systems</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <section id="projects" aria-labelledby="projects-h">
+      <h2 id="projects-h">Projects</h2>
+      <div class="filters" role="group" aria-label="Filter projects by engine">
+        <button class="chip" type="button" data-f="all" aria-pressed="true">All · 7</button>
+        <button class="chip" type="button" data-f="unity" aria-pressed="false">Unity · 4</button>
+        <button class="chip" type="button" data-f="godot" aria-pressed="false">Godot · 3</button>
+      </div>
+
+      <div class="projects">
+
+        <article class="proj" data-engine="unity">
+          <a class="media" href="https://www.youtube.com/watch?v=cbSv3pUUn8U" target="_blank" rel="noopener" aria-label="Watch the A Cig Please video on YouTube"><img src="a-cig-please.jpg" alt="A Cig Please key art next to the ISART Game Week 2026 poster, theme L'Empreinte" loading="lazy"><span class="play"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>Video</span></a>
+          <div>
+            <div class="head"><h3>A Cig Please</h3><a class="watch" href="https://www.youtube.com/watch?v=cbSv3pUUn8U" target="_blank" rel="noopener">Watch video ↗</a></div>
+            <p class="desc">A narrative game with a psychological tone, made in one week by a team for ISART's Game Week 2026, on the theme “L'Empreinte” (The Imprint).</p>
+            <dl class="spec">
+              <div><dt>Engine</dt><dd>Unity</dd></div>
+              <div><dt>Team</dt><dd>Team project</dd></div>
+              <div><dt>Duration</dt><dd>7 days</dd></div>
+              <div><dt>Context</dt><dd>ISART · Year 3</dd></div>
+            </dl>
+            <ul class="tags"><li>Narrative gameplay</li><li>Camera effects</li><li>Gameplay design</li></ul>
+          </div>
+        </article>
+
+        <article class="proj" data-engine="unity">
+          <a class="media" href="https://www.youtube.com/shorts/G1teNA7yUeg" target="_blank" rel="noopener" aria-label="Watch Brick Rush gameplay on YouTube"><img src="brick-rush.jpg" alt="Brick Rush: a block puzzle on a phone screen with a x2 combo" loading="lazy" style="object-position: 50% 45%"><span class="play"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>Gameplay</span></a>
+          <div>
+            <div class="head"><h3>Brick Rush</h3><a class="watch" href="https://www.youtube.com/shorts/G1teNA7yUeg" target="_blank" rel="noopener">Watch gameplay ↗</a></div>
+            <p class="desc">A free-to-play mobile game with simple, addictive gameplay. The goal was to add several monetization systems without hurting the experience or player retention.</p>
+            <dl class="spec">
+              <div><dt>Engine</dt><dd>Unity</dd></div>
+              <div><dt>Team</dt><dd>Team project</dd></div>
+              <div><dt>Duration</dt><dd>1 month</dd></div>
+              <div><dt>Context</dt><dd>ISART · Year 2</dd></div>
+            </dl>
+            <ul class="tags"><li>Gameplay design</li><li>Monetization</li><li>Player behavior analysis</li><li>Mobile UI/UX</li><li>Mobile performance</li></ul>
+          </div>
+        </article>
+        <article class="proj" data-engine="unity">
+          <a class="media" href="https://www.youtube.com/watch?v=OdhbJzt3nJw" target="_blank" rel="noopener" aria-label="Watch the Child of the Fog trailer on YouTube"><img src="child-of-the-fog.jpg" alt="Child of the Fog: a small character in a gas mask on a dark cobblestone floor" loading="lazy"><span class="play"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>Trailer</span></a>
+          <div>
+            <div class="head"><h3>Child of the Fog</h3><a class="watch" href="https://www.youtube.com/watch?v=OdhbJzt3nJw" target="_blank" rel="noopener">Watch trailer ↗</a></div>
+            <p class="desc">A 3D platformer with about four minutes of gameplay, built in two months. Every mechanic was chosen to fit the game's world.</p>
+            <dl class="spec">
+              <div><dt>Engine</dt><dd>Unity</dd></div>
+              <div><dt>Team</dt><dd>Team project</dd></div>
+              <div><dt>Duration</dt><dd>2 months</dd></div>
+              <div><dt>Context</dt><dd>ISART · Year 2</dd></div>
+            </dl>
+            <ul class="tags"><li>Player controls</li><li>Camera</li><li>3D physics</li><li>Collisions &amp; triggers</li><li>Level design</li><li>Optimization</li></ul>
+          </div>
+        </article>
+
+        <article class="proj" data-engine="unity">
+          <a class="media" href="https://www.youtube.com/watch?v=Wh3QTiEisfQ&amp;t=53s" target="_blank" rel="noopener" aria-label="Watch the Rush to the Flag walkthrough on YouTube"><img src="rush-to-the-flag.jpg" alt="Rush to the Flag: a floating voxel island with trees and direction tiles" loading="lazy" style="object-position: 50% 30%"><span class="play"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>Walkthrough</span></a>
+          <div>
+            <div class="head"><h3>Rush to the Flag</h3><a class="watch" href="https://www.youtube.com/watch?v=Wh3QTiEisfQ&amp;t=53s" target="_blank" rel="noopener">Watch walkthrough ↗</a></div>
+            <p class="desc">A puzzle game inspired by Rush, with three original golf-themed levels.</p>
+            <dl class="spec">
+              <div><dt>Engine</dt><dd>Unity</dd></div>
+              <div><dt>Team</dt><dd>Solo</dd></div>
+              <div><dt>Duration</dt><dd>45 days</dd></div>
+              <div><dt>Context</dt><dd>ISART · Year 2</dd></div>
+            </dl>
+            <ul class="tags"><li>Object states</li><li>Object interactions</li><li>Modular scripts</li><li>3D workflow</li></ul>
+          </div>
+        </article>
+
+        <article class="proj" data-engine="godot">
+          <a class="media" href="https://www.youtube.com/watch?v=Of2vPGgszzU" target="_blank" rel="noopener" aria-label="Watch the Glitch Tempo walkthrough on YouTube"><img src="glitch-tempo.jpg" alt="Glitch Tempo: a retro desktop window with a timing bar and an upload counter" loading="lazy"><span class="play"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>Walkthrough</span></a>
+          <div>
+            <div class="head"><h3>Glitch Tempo</h3><a class="watch" href="https://www.youtube.com/watch?v=Of2vPGgszzU" target="_blank" rel="noopener">Watch walkthrough ↗</a></div>
+            <p class="desc">A rhythm game played with a single input. It runs on phones and low-end devices and uses only the engine's built-in tools, with no external assets.</p>
+            <dl class="spec">
+              <div><dt>Engine</dt><dd>Godot</dd></div>
+              <div><dt>Team</dt><dd>Solo</dd></div>
+              <div><dt>Duration</dt><dd>1 month</dd></div>
+              <div><dt>Context</dt><dd>ISART · Year 1</dd></div>
+            </dl>
+            <ul class="tags"><li>Timing &amp; rhythm design</li><li>Player feedback</li><li>Low-end optimization</li></ul>
+          </div>
+        </article>
+
+        <article class="proj" data-engine="godot">
+          <a class="media" href="https://www.youtube.com/watch?v=HBmlQYpev5o" target="_blank" rel="noopener" aria-label="Watch SoCookBan gameplay on YouTube"><img src="socookban.jpg" alt="SoCookBan: a pixel-art chef in a kitchen grid with an order ticket for table 2" loading="lazy"><span class="play"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>Gameplay</span></a>
+          <div>
+            <div class="head"><h3>SoCookBan</h3><a class="watch" href="https://www.youtube.com/watch?v=HBmlQYpev5o" target="_blank" rel="noopener">Watch gameplay ↗</a></div>
+            <p class="desc">A cooking twist on the Sokoban formula, with three levels and pathfinding.</p>
+            <dl class="spec">
+              <div><dt>Engine</dt><dd>Godot</dd></div>
+              <div><dt>Team</dt><dd>Team project</dd></div>
+              <div><dt>Duration</dt><dd>2 months</dd></div>
+              <div><dt>Context</dt><dd>ISART · Year 1</dd></div>
+            </dl>
+            <ul class="tags"><li>Grid-based systems</li><li>Pathfinding</li><li>Level design</li><li>Git teamwork</li></ul>
+          </div>
+        </article>
+
+        <article class="proj" data-engine="godot">
+          <a class="media" href="https://www.youtube.com/watch?v=MUrwWAYa2Js" target="_blank" rel="noopener" aria-label="Watch Cyber Lofi gameplay on YouTube"><img src="cyber-lofi.jpg" alt="Cyber Lofi: a pixel-art ship facing a giant flower boss over a pink city" loading="lazy"><span class="play"><svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2 1l9 5-9 5z"/></svg>Gameplay</span></a>
+          <div>
+            <div class="head"><h3>Cyber Lofi</h3><a class="watch" href="https://www.youtube.com/watch?v=MUrwWAYa2Js" target="_blank" rel="noopener">Watch gameplay ↗</a></div>
+            <p class="desc">An action game with designed levels, a boss fight and enemy patterns. It has responsive controls and reusable systems for bullets, enemies and effects.</p>
+            <dl class="spec">
+              <div><dt>Engine</dt><dd>Godot</dd></div>
+              <div><dt>Team</dt><dd>Solo</dd></div>
+              <div><dt>Duration</dt><dd>1 month</dd></div>
+              <div><dt>Context</dt><dd>ISART · Year 1</dd></div>
+            </dl>
+            <ul class="tags"><li>Enemy AI</li><li>Boss patterns</li><li>Collision systems</li><li>Scene architecture</li></ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="experience" aria-labelledby="exp-h">
+      <h2 id="exp-h">Experience</h2>
+      <div class="timeline">
+        <div class="item">
+          <div class="date">May – Jul 2026</div>
+          <div>
+            <h3>Game Developer Intern</h3>
+            <p class="org">Dobox · Lille, France</p>
+            <ul>
+              <li>Built a rhythm game controlled by hand movements, using video-based hand tracking.</li>
+              <li>Integrated live camera input as the main gameplay control.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="item">
+          <div class="date">Oct 2022 – Sep 2023</div>
+          <div>
+            <h3>Web Marketer &amp; Community Manager</h3>
+            <p class="org">Event MANGA · Cambrai, France</p>
+            <ul>
+              <li>Built the website and online ticketing for an event with 9,000 visitors.</li>
+              <li>Ran community management and online promotion.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="item">
+          <div class="date">Nov 2022 – Jan 2023</div>
+          <div>
+            <h3>Assistant Web Analyst</h3>
+            <p class="org">Decathlon · France</p>
+            <p>Market research on the camping sector and online data analysis to support business decisions.</p>
+          </div>
+        </div>
+      </div>
+
+      <p class="sub">Other experience</p>
+      <div class="timeline compact">
+        <div class="item"><div class="date">Jul – Sep 2026</div><div><h3>Sales Assistant</h3><p class="org">Micromania · Cap3000, Nice. Advised customers on games and new releases.</p></div></div>
+        <div class="item"><div class="date">Jun – Dec 2025</div><div><h3>Sales Advisor (student job)</h3><p class="org">Tête dans les nuages · Cap3000, Nice</p></div></div>
+        <div class="item"><div class="date">Feb – Sep 2024</div><div><h3>Chef</h3><p class="org">Spotted Dog · Dundalk, Ireland. Led a kitchen team in English.</p></div></div>
+        <div class="item"><div class="date">Sep – Nov 2021</div><div><h3>Commis Chef</h3><p class="org">Refuge des Gourmets · Machilly. Michelin-starred restaurant.</p></div></div>
+        <div class="item"><div class="date">2018 – 2021</div><div><h3>Cook, culinary training</h3><p class="org">La Perdrix Blanche, Le Maestro, Côté Lac</p></div></div>
+      </div>
+    </section>
+
+    <section id="education" aria-labelledby="edu-h">
+      <h2 id="edu-h">Education</h2>
+      <div class="timeline">
+        <div class="item">
+          <div class="date">2024 – 2029</div>
+          <div>
+            <h3>Game Design &amp; Programming</h3>
+            <p class="org">ISART Digital · Nice</p>
+            <p>Team game productions alongside game designers and artists.</p>
+          </div>
+        </div>
+        <div class="item">
+          <div class="date">2024</div>
+          <div><h3>English certification, B2</h3><p class="org">EF School of English · Dublin</p></div>
+        </div>
+        <div class="item">
+          <div class="date">2021 – 2023</div>
+          <div><h3>DUT Business &amp; Marketing (Digital Marketing), with honours</h3><p class="org">IUT Cambrai</p></div>
+        </div>
+        <div class="item">
+          <div class="date">2018 – 2021</div>
+          <div><h3>Professional Baccalaureate in Culinary Arts</h3><p class="org">Lycée hôtelier Savoie-Léman · Thonon</p></div>
+        </div>
+      </div>
+      <div class="langs">
+        <div><span class="mono">French</span><b>Native</b></div>
+        <div><span class="mono">English</span><b>B2, worked in Ireland</b></div>
+      </div>
+    </section>
+
+    <footer>Hugo Bochatay · hugo.bochataypro@gmail.com · <a href="https://www.linkedin.com/in/hugo-bochatay/" target="_blank" rel="noopener">LinkedIn</a></footer>
+  </main>
+</div>
+
+<script>
+(function () {
+  // Copy email
+  var btn = document.getElementById('copy');
+  var email = document.getElementById('email');
+  btn.addEventListener('click', function () {
+    var text = email.textContent.trim();
+    function done() { btn.textContent = 'Copied'; setTimeout(function () { btn.textContent = 'Copy'; }, 1600); }
+    function fallback() {
+      var r = document.createRange(); r.selectNodeContents(email);
+      var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+      btn.textContent = 'Selected';
+      setTimeout(function () { btn.textContent = 'Copy'; }, 1600);
+    }
+    try {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } catch (e) { fallback(); }
+  });
+
+  // Engine filter
+  var chips = document.querySelectorAll('.chip');
+  var cards = document.querySelectorAll('.proj');
+  chips.forEach(function (c) {
+    c.addEventListener('click', function () {
+      var f = c.dataset.f;
+      chips.forEach(function (x) { x.setAttribute('aria-pressed', x === c ? 'true' : 'false'); });
+      cards.forEach(function (card) { card.hidden = !(f === 'all' || card.dataset.engine === f); });
+    });
+  });
+
+  // Highlight current section in nav
+  var links = document.querySelectorAll('.nav a');
+  var secs = Array.prototype.map.call(links, function (a) { return document.querySelector(a.getAttribute('href')); });
+  function onScroll() {
+    var y = window.scrollY + 140, idx = 0;
+    secs.forEach(function (s, i) { if (s && s.offsetTop <= y) idx = i; });
+    links.forEach(function (a, i) { a.classList.toggle('on', i === idx); });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+})();
+</script>
+</body>
+</html>
